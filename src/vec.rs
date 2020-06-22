@@ -95,3 +95,113 @@ pub fn cross(v1: &Vec3, v2: &Vec3) -> Vec3 {
         z: v1.x * v2.y - v1.y * v2.x 
     }
 }
+
+mod tests {
+    #[allow(unused_imports)]
+    use super::*;
+
+    #[test]
+    fn test_new() {
+        let v: Vec3 = Vec3::new(0., 0., 0.);
+
+        assert_eq!(v.x, 0.);
+        assert_eq!(v.y, 0.);
+        assert_eq!(v.z, 0.);
+    }
+
+    #[test]
+    fn test_zero() {
+        let v: Vec3 = Vec3::zero();
+
+        assert_eq!(v.x, 0.);
+        assert_eq!(v.y, 0.);
+        assert_eq!(v.z, 0.);
+    }
+
+    #[test]
+    fn test_add_v_v() {
+        let v1: Vec3 = Vec3::new(1., 2., 3.);
+        let v2: Vec3 = Vec3::new(2., 1., 0.);
+        let sum: Vec3 = &v1 + &v2;
+
+        assert_eq!(sum.x, 3.);
+        assert_eq!(sum.y, 3.);
+        assert_eq!(sum.z, 3.);
+    }
+
+    #[test]
+    fn test_add_v_s() {
+        let v: Vec3 = Vec3::new(1., 2., 3.);
+        let s: f64 = 2.;
+        let sum: Vec3 = &v + s;
+
+        assert_eq!(sum.x, 3.);
+        assert_eq!(sum.y, 4.);
+        assert_eq!(sum.z, 5.);
+    }
+
+    #[test]
+    fn test_mul_v_v() {
+        let v1: Vec3 = Vec3::new(1., 2., 3.);
+        let v2: Vec3 = Vec3::new(2., 2., 0.);
+        let mul: Vec3 = &v1 * &v2;
+
+        assert_eq!(mul.x, 2.);
+        assert_eq!(mul.y, 4.);
+        assert_eq!(mul.z, 0.);
+    }
+
+    
+    #[test]
+    fn test_mul_s_v() {
+        let v: Vec3 = Vec3::new(1., 2., 3.);
+        let s: f64 = 2.;
+        let mul: Vec3 = s * &v;
+
+        assert_eq!(mul.x, 2.);
+        assert_eq!(mul.y, 4.);
+        assert_eq!(mul.z, 6.);
+    }
+
+    #[test]
+    fn test_mul_v_s() {
+        let v: Vec3 = Vec3::new(1., 2., 3.);
+        let s: f64 = 2.;
+        let mul: Vec3 = &v * s;
+
+        assert_eq!(mul.x, 2.);
+        assert_eq!(mul.y, 4.);
+        assert_eq!(mul.z, 6.);
+    }
+
+    #[test]
+    fn test_div_v_s() {
+        let v: Vec3 = Vec3::new(4., 2., 6.);
+        let s: f64 = 2.;
+        let div: Vec3 = &v / s;
+
+        assert_eq!(div.x, 2.);
+        assert_eq!(div.y, 1.);
+        assert_eq!(div.z, 3.);
+    }
+
+    #[test]
+    fn test_dot() {
+        let v1: Vec3 = Vec3::new(1., 2., 3.);
+        let v2: Vec3 = Vec3::new(1., 5., 7.);
+        let d = dot(&v1, &v2);
+
+        assert_eq!(d, 32.);
+    }
+
+    #[test]
+    fn test_cross() {
+        let v1: Vec3 = Vec3::new(1., 2., 3.);
+        let v2: Vec3 = Vec3::new(1., 5., 7.);
+        let c = cross(&v1, &v2);
+
+        assert_eq!(c.x, -1.);
+        assert_eq!(c.y, -4.);
+        assert_eq!(c.z, 3.);
+    }
+}
