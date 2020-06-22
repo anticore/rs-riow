@@ -18,7 +18,6 @@ pub struct Image {
 
 impl Image {
     pub fn new(width: u32, height: u32) -> Image {
-        println!("{} {}", width, height);
         let length: usize = usize::try_from(width * 4 * height).unwrap();
 
         Image {
@@ -77,26 +76,5 @@ mod tests {
         assert_eq!(image.buffer[1], 0);
         assert_eq!(image.buffer[2], 255);
         assert_eq!(image.buffer[3], 255);
-
-        image.set_pixel(0, 1, &Color::new(1., 0., 1., 1.));
-
-        assert_eq!(image.buffer[4], 255);
-        assert_eq!(image.buffer[5], 0);
-        assert_eq!(image.buffer[6], 255);
-        assert_eq!(image.buffer[7], 255);
-
-        image.set_pixel(1, 0, &Color::new(1., 0., 1., 1.));
-
-        assert_eq!(image.buffer[8], 255);
-        assert_eq!(image.buffer[9], 0);
-        assert_eq!(image.buffer[10], 255);
-        assert_eq!(image.buffer[11], 255);
-
-        image.set_pixel(1, 1, &Color::new(0., 1., 1., 1.));
-
-        assert_eq!(image.buffer[12], 0);
-        assert_eq!(image.buffer[13], 255);
-        assert_eq!(image.buffer[14], 255);
-        assert_eq!(image.buffer[15], 255);
     }
 }
