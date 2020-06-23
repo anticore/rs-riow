@@ -21,7 +21,11 @@ impl Vec3 {
     }
 
     pub fn length(&self) -> f32 {
-        return f32::sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
+        return f32::sqrt(self.length_squared());
+    }
+    
+    pub fn length_squared(&self) -> f32 {
+        return self.x * self.x + self.y * self.y + self.z * self.z;
     }
 }
 

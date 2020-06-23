@@ -11,9 +11,10 @@ pub struct Color {
 }
 
 fn clamp (n: f32) -> f32 {
-    if n < 0. { return 0. }
-    else if n > 1. { return 1. }
-    else { return n };
+    //if n < 0. { return 0. }
+    //else if n > 1. { return 1. }
+    //else { return n };
+    return n;
 }
 
 impl Color {
