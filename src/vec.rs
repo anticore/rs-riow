@@ -91,7 +91,7 @@ impl ops::Mul<Vec3> for f32 {
 
     #[inline]
     fn mul(self, other: Vec3) -> Vec3 {
-        Vec3 { x: self * &other.x, y: self * &other.y, z: self * &other.z }
+        return other * self;
     }
 }
 
@@ -123,8 +123,7 @@ pub fn cross(v1: Vec3, v2: Vec3) -> Vec3 {
 
 #[inline]
 pub fn normalize(v: Vec3) -> Vec3 {
-    let len = 1. / &v.length();
-    return v * len;
+    return v / v.length();
 }
 
 mod tests {

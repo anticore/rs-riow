@@ -15,7 +15,7 @@ const IMAGE_WIDTH: u32 = 384;
 const IMAGE_HEIGHT: u32 = (IMAGE_WIDTH as f32 / ASPECT_RATIO) as u32;
 const VIEWPORT_HEIGHT: f32 = 2.;
 const VIEWPORT_WIDTH: f32 = ASPECT_RATIO * VIEWPORT_HEIGHT;
-const FOCAL_LENGTH: f32 = 0.;
+const FOCAL_LENGTH: f32 = 1.;
 
 fn print_info() {
     println!("Aspect Ratio = {}\nImage Size = {} x {}", ASPECT_RATIO, IMAGE_WIDTH, IMAGE_HEIGHT);
