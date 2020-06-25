@@ -10,6 +10,8 @@ use image::Image;
 mod ray;
 use ray::Ray;
 
+mod hittable;
+
 const ASPECT_RATIO: f32 = 16. / 9.;
 const IMAGE_WIDTH: u32 = 384;
 const IMAGE_HEIGHT: u32 = (IMAGE_WIDTH as f32 / ASPECT_RATIO) as u32;
