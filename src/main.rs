@@ -11,6 +11,12 @@ mod ray;
 use ray::Ray;
 
 mod hittable;
+use hittable::HittableList;
+use hittable::Sphere;
+
+mod common;
+#[allow(unused_imports)]
+use common::*;
 
 const ASPECT_RATIO: f32 = 16. / 9.;
 const IMAGE_WIDTH: u32 = 384;
@@ -25,37 +31,27 @@ fn print_info() {
     println!();
 }
 
-fn hit_sphere(ray: Ray, center: Vec3, radius: f32) -> f32 {
-    // solve t^2*b . b + 2*t*b . (A-C) + (A-C) . (A-C) - r^2 = 0 for t
-    // t comes from the ray's equation origin + t * direction 
-    // so t is the intersection of the ray with the sphere
-
-    let oc = ray.origin - center;
-    let a = ray.direction.length_squared();
-    let half_b = Vec3::dot(oc, ray.direction);
-    let c = oc.length_squared() - radius * radius;
-    let discriminant = half_b*half_b - a*c;
-
-    // no intersection
-    if discriminant < 0. {
-        return -1.;
-    } else {
-        // quadratic formula
-        return (-half_b - f32::sqrt(discriminant)) / 2. * a;
-    }
+fn create_objects(world: &mut HittableList) {
+    world.add(Sphere::new(Vec3::new(0., 0., -1.), 0.5).into());
+    world.add(Sphere::new(Vec3::new(0., -100.5, -1.), 100.).into());
 }
 
-fn ray_color(ray: Ray) -> Color {
-    let center = Vec3::new(0., 0., -1.);
-    let hit_point = hit_sphere(ray, center, 0.5);
-
-    if hit_point > 0. {
-        let normal = (ray.at(hit_point) - center).normalize();
-        return Color::new(0.5 * (normal.x + 1.), 0.5 * (normal.y + 1.), 0.5 * (normal.z + 1.), 1.);
+fn ray_color(ray: Ray, world: &HittableList) -> Color {
+    match world.hit(ray, 0., 99999.) {
+        Some(r) => {
+            return Color::new(
+                0.5 * (r.normal.x + 1.),
+                0.5 * (r.normal.y + 1.),
+                0.5 * (r.normal.z + 1.),
+                1.
+            )
+        }
+        None => {
+            let dir = ray.direction.normalize();
+            let t = 0.5 * (dir.y + 1.);
+            return (1. - t) * Color::new(1., 1., 1., 1.) + t * Color::new(0.5, 0.7, 1.0, 1.0);
+        }
     }
-    let dir = ray.direction.normalize();
-    let t = 0.5 * (dir.y + 1.);
-    return (1. - t) * Color::new(1., 1., 1., 1.) + t * Color::new(0.5, 0.7, 1.0, 1.0);
 }
 
 
@@ -69,6 +65,10 @@ fn main() {
     let vertical = Vec3::new( 0., VIEWPORT_HEIGHT, 0.);
     let lower_left_corner = origin - (horizontal / 2.) - (vertical / 2.) - Vec3::new(0., 0., FOCAL_LENGTH);
 
+    let mut world = HittableList::new();
+    create_objects(&mut world);
+    
+
     for x in 0..IMAGE_WIDTH {
         print!(".");
         for y in 0..IMAGE_HEIGHT {
@@ -78,7 +78,7 @@ fn main() {
             let direction: Vec3 = lower_left_corner + (u * horizontal) + (v * vertical) - origin;
 
             let ray: Ray = Ray::new(origin, direction);
-            let color: Color = ray_color(ray);
+            let color: Color = ray_color(ray, &world);
             image.set_pixel(x, y, &color);
         }
     }
