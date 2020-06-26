@@ -17,29 +17,3 @@ impl Ray {
         return self.origin + t * self.direction;
     }
 }
-
-mod tests {
-    #[allow(unused_imports)]
-    use super::*;
-
-    #[test]
-    fn test_new() {
-        let origin = Vec3::new(0., 0., 0.);
-        let direction = Vec3::new(1., 1., 1.);
-        let ray = Ray::new(origin, direction);
-
-        assert_eq!(ray.origin.x, 0.);
-    }
-
-    #[test]
-    fn test_at() {
-        let origin = Vec3::new(0., 0., 0.);
-        let direction = Vec3::new(1., 1., 1.);
-        let ray = Ray::new(origin, direction);
-
-        let at = ray.at(2.);
-        assert_eq!(at.x, 2.);
-        assert_eq!(at.y, 2.);
-        assert_eq!(at.z, 2.);
-    }
-}

@@ -32,7 +32,7 @@ fn hit_sphere(ray: Ray, center: Vec3, radius: f32) -> f32 {
 
     let oc = ray.origin - center;
     let a = ray.direction.length_squared();
-    let half_b = vec::dot(oc, ray.direction);
+    let half_b = Vec3::dot(oc, ray.direction);
     let c = oc.length_squared() - radius * radius;
     let discriminant = half_b*half_b - a*c;
 
@@ -50,10 +50,10 @@ fn ray_color(ray: Ray) -> Color {
     let hit_point = hit_sphere(ray, center, 0.5);
 
     if hit_point > 0. {
-        let normal = vec::normalize(ray.at(hit_point) - center);
+        let normal = (ray.at(hit_point) - center).normalize();
         return Color::new(0.5 * (normal.x + 1.), 0.5 * (normal.y + 1.), 0.5 * (normal.z + 1.), 1.);
     }
-    let dir = vec::normalize(ray.direction);
+    let dir = ray.direction.normalize();
     let t = 0.5 * (dir.y + 1.);
     return (1. - t) * Color::new(1., 1., 1., 1.) + t * Color::new(0.5, 0.7, 1.0, 1.0);
 }

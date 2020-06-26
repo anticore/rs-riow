@@ -37,7 +37,7 @@ impl Image {
         self.buffer[buffer_pos + 3] = (color.a * 255.).round() as u8;
     }
 
-    pub fn save(&mut self, path: String) {
+    pub fn save(self, path: String) {
         let path = Path::new(&path);
         let file = File::create(path).unwrap();
         let ref mut w = BufWriter::new(file);
@@ -47,34 +47,5 @@ impl Image {
         let mut writer = encoder.write_header().unwrap();
         let data: &[u8] = self.buffer.as_slice();
         writer.write_image_data(data).unwrap();
-    }
-}
-
-mod tests {
-    #[allow(unused_imports)]
-    use super::*;
-
-    #[test]
-    fn test_new() {
-        let image: Image = Image::new(2, 2);
-
-        assert_eq!(image.width, 2);
-        assert_eq!(image.height, 2);
-        assert_eq!(image.buffer.len(), 16);
-    }
-
-    #[test]
-    fn test_set_pixel() {
-        let mut image: Image = Image::new(2, 2);
-
-        assert_eq!(image.width, 2);
-        assert_eq!(image.height, 2);
-
-        image.set_pixel(0, 0, &Color::new(1., 0., 1., 1.));
-
-        assert_eq!(image.buffer[0], 255);
-        assert_eq!(image.buffer[1], 0);
-        assert_eq!(image.buffer[2], 255);
-        assert_eq!(image.buffer[3], 255);
     }
 }
