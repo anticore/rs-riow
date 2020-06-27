@@ -50,7 +50,7 @@ fn main() {
     let mut world = HittableList::new();
     create_objects(&mut world);
     
-    let samples_per_pixel = 10;
+    let samples_per_pixel = 100;
 
     for x in 0..image_width {
         print!(".");
