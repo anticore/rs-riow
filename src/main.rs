@@ -53,8 +53,8 @@ fn main() {
     let samples_per_pixel = 10;
 
     for x in 0..image_width {
+        print!(".");
         for y in 0..image_height {
-            print!(".");
             let mut color = Vec3::new(0., 0., 0.);
 
             for _ in 0..samples_per_pixel {    
