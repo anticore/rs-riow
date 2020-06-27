@@ -23,3 +23,9 @@ macro_rules! rnd {
         random_f(0., 1.)
     }
 }
+
+pub fn clamp(n: f32, min: f32, max: f32) -> f32 {
+    if n < min { return min } 
+    if n > max { return max }
+    return n;
+}

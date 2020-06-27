@@ -6,8 +6,8 @@ use std::io::BufWriter;
 use png;
 use png::HasParameters;
 use std::convert::TryFrom;
-use crate::color::Color;
-
+use crate::vec::Vec3;
+use crate::common::*;
 
 pub struct Image {
     pub buffer: Vec<u8>,
@@ -27,14 +27,18 @@ impl Image {
         }
     }
 
-    pub fn set_pixel(&mut self, x: u32, y: u32, color: &Color) {
+    pub fn set_pixel(&mut self, x: u32, y: u32, color: &Vec3, samples_per_pixel: u32) {
         let buffer_pos: usize = usize::try_from(y * self.width * 4 + x * 4).unwrap();
 
+        let scale = 1. / samples_per_pixel as f32;
+        let r = clamp(color.x * scale, 0., 0.999);
+        let g = clamp(color.y * scale, 0., 0.999);
+        let b = clamp(color.z * scale, 0., 0.999);
 
-        self.buffer[buffer_pos] = (color.r * 255.).round() as u8;
-        self.buffer[buffer_pos + 1] = (color.g * 255.).round() as u8;
-        self.buffer[buffer_pos + 2] = (color.b * 255.).round() as u8;
-        self.buffer[buffer_pos + 3] = (color.a * 255.).round() as u8;
+        self.buffer[buffer_pos] = (r * 255.).round() as u8;
+        self.buffer[buffer_pos + 1] = (g * 255.).round() as u8;
+        self.buffer[buffer_pos + 2] = (b * 255.).round() as u8;
+        self.buffer[buffer_pos + 3] = 255;
     }
 
     pub fn save(self, path: String) {
