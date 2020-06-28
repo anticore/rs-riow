@@ -31,7 +31,7 @@ fn ray_color(ray: Ray, world: &HittableList, depth: u32) -> Vec3 {
 
     match world.hit(ray, 0.001, 999.) {
         Some(r) => {
-            let target: Vec3 = r.point + r.normal + Vec3::random_in_unit_sphere();
+            let target: Vec3 = r.point + r.normal + Vec3::random_unit_vector();
             return 0.5 * ray_color(Ray::new(r.point, target - r.point), &world, depth-1);
         }
         None => {
@@ -42,7 +42,7 @@ fn ray_color(ray: Ray, world: &HittableList, depth: u32) -> Vec3 {
     }
 }
 
-const IMAGE_WIDTH: u32 = 1280;
+const IMAGE_WIDTH: u32 = 320;
 const SAMPLES_PER_PIXEL: u32 = 100;
 const MAX_DEPTH: u32 = 50;
 

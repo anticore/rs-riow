@@ -37,6 +37,14 @@ impl Vec3 {
         }
     }
 
+    pub fn random_unit_vector() -> Vec3 {
+        let a = random_f(0., 2. * PI);
+        let z = random_f(-1., 1.);
+        let r = f32::sqrt(1. - z*z);
+
+        return Vec3::new(r * f32::cos(a), r * f32::sin(a), z);
+    }
+
     pub fn length(&self) -> f32 {
         return f32::sqrt(self.length_squared());
     }
