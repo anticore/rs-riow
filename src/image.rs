@@ -31,9 +31,9 @@ impl Image {
         let buffer_pos: usize = usize::try_from(y * self.width * 4 + x * 4).unwrap();
 
         let scale = 1. / samples_per_pixel as f32;
-        let r = clamp(color.x * scale, 0., 0.999);
-        let g = clamp(color.y * scale, 0., 0.999);
-        let b = clamp(color.z * scale, 0., 0.999);
+        let r = clamp(f32::sqrt(color.x * scale), 0., 0.999);
+        let g = clamp(f32::sqrt(color.y * scale), 0., 0.999);
+        let b = clamp(f32::sqrt(color.z * scale), 0., 0.999);
 
         self.buffer[buffer_pos] = (r * 255.).round() as u8;
         self.buffer[buffer_pos + 1] = (g * 255.).round() as u8;

@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 
+use crate::common::*;
+
 use std::ops;
 use std::primitive::f32;
 
@@ -18,6 +20,21 @@ impl Vec3 {
 
     pub fn zero() -> Vec3 {
         Vec3 { x: 0., y: 0., z: 0. }
+    }
+
+    pub fn random(min: f32, max: f32) -> Vec3 {
+        Vec3 {
+            x: random_f(min, max),
+            y: random_f(min, max),
+            z: random_f(min, max)
+        }
+    }
+
+    pub fn random_in_unit_sphere() -> Vec3 {
+        loop {
+            let v = Vec3::random(-1., 1.);
+            if v.length_squared() < 1. { return v }
+        }
     }
 
     pub fn length(&self) -> f32 {
