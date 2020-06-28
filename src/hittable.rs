@@ -2,6 +2,8 @@
 
 use crate::vec::Vec3;
 use crate::ray::Ray;
+use crate::material::Material;
+use crate::material::LambertianMaterial;
 
 #[derive(Debug, Copy, Clone)]
 pub struct HitRecord {
@@ -9,6 +11,7 @@ pub struct HitRecord {
     pub normal: Vec3,
     pub t: f32,
     pub front_face: bool,
+    pub material: Material
 }
 
 impl HitRecord {
@@ -17,7 +20,8 @@ impl HitRecord {
             point: Vec3::new(0., 0., 0.),
             normal: Vec3::new(0., 0., 0.),
             t: 0.,
-            front_face: false
+            front_face: false,
+            material: LambertianMaterial::new(Vec3::zero()).into()
         }
     }
 
@@ -30,14 +34,16 @@ impl HitRecord {
 #[derive(Debug, Copy, Clone)]
 pub struct Sphere {
     pub center: Vec3,
-    pub radius: f32
+    pub radius: f32,
+    pub material: Material
 }
 
 impl Sphere {
-    pub fn new(center: Vec3, radius: f32) -> Sphere {
+    pub fn new(center: Vec3, radius: f32, material: Material) -> Sphere {
         Sphere {
-            center: center,
-            radius: radius
+            center,
+            radius,
+            material
         }
     }
 }
@@ -50,7 +56,7 @@ pub enum HittableObject {
 impl HittableObject {
     pub fn hit(self, ray: Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         match self {
-            HittableObject::Sphere(Sphere { center, radius }) => {
+            HittableObject::Sphere(Sphere { center, radius, material }) => {
                 // solve t^2*b . b + 2*t*b . (A-C) + (A-C) . (A-C) - r^2 = 0 for t
                 // t comes from the ray's equation origin + t * direction 
                 // so t is the intersection of the ray with the sphere
@@ -72,6 +78,7 @@ impl HittableObject {
                         rec.point = ray.at(rec.t);
                         let outward_normal = (rec.point - center) / radius;
                         rec.set_face_normal(ray, outward_normal);
+                        rec.material = material;
                         return Some(rec);
                     }
 
@@ -80,6 +87,7 @@ impl HittableObject {
                         rec.point = ray.at(rec.t);
                         let outward_normal = (rec.point - center) / radius;
                         rec.set_face_normal(ray, outward_normal);
+                        rec.material = material;
                         return Some(rec);
                     }
                 } 

@@ -71,6 +71,10 @@ impl Vec3 {
     pub fn normalize(self) -> Vec3 {
         return self / self.length();
     }
+
+    pub fn reflect(self, n: Vec3) -> Vec3 {
+        return self - 2. * Vec3::dot(self, n) * n;
+    }
 }
 
 ///-vector

@@ -17,11 +17,43 @@ use hittable::Sphere;
 mod camera;
 use camera::Camera;
 
+mod material;
+use material::LambertianMaterial;
+use material::MetalMaterial;
+
 use std::time::Instant;
 
 fn create_objects(world: &mut HittableList) {
-    world.add(Sphere::new(Vec3::new(0., 0., -1.), 0.5).into());
-    world.add(Sphere::new(Vec3::new(0., -100.5, -1.), 100.).into());
+    // centered lambertian material sphere
+    let origin = Vec3::new(0., 0., -1.);
+    let radius = 0.5;
+    let albedo = Vec3::new(0.7, 0.3, 0.3);
+    let material = LambertianMaterial::new(albedo).into();
+    world.add(Sphere::new(origin, radius, material).into());
+
+    // "ground" sphere
+    let origin = Vec3::new(0., -100.5, -1.);
+    let radius = 100.;
+    let albedo = Vec3::new(0.8, 0.8, 0.0);
+    let material = LambertianMaterial::new(albedo).into();
+    world.add(Sphere::new(origin, radius, material).into());
+
+    // right metal material ball
+    let origin = Vec3::new(1., 0., -1.);
+    let radius = 0.5;
+    let albedo = Vec3::new(0.8, 0.6, 0.2);
+    let fuzz = 0.1;
+    let material = MetalMaterial::new(albedo, fuzz).into();
+    world.add(Sphere::new(origin, radius, material).into());
+
+    
+    // right metal material ball
+    let origin = Vec3::new(-1., 0., -1.);
+    let radius = 0.5;
+    let albedo = Vec3::new(0.2, 0.6, 0.8);
+    let fuzz = 0.9;
+    let material = MetalMaterial::new(albedo, fuzz).into();
+    world.add(Sphere::new(origin, radius, material).into());
 }
 
 fn ray_color(ray: Ray, world: &HittableList, depth: u32) -> Vec3 {
@@ -31,8 +63,8 @@ fn ray_color(ray: Ray, world: &HittableList, depth: u32) -> Vec3 {
 
     match world.hit(ray, 0.001, 999.) {
         Some(r) => {
-            let target: Vec3 = r.point + r.normal + Vec3::random_unit_vector();
-            return 0.5 * ray_color(Ray::new(r.point, target - r.point), &world, depth-1);
+            let (valid, scattered, attenuation) = r.material.scatter(ray, r);
+            if valid { return attenuation * ray_color(scattered, &world, depth-1) } else { return Vec3::new(0., 0., 0.) };
         }
         None => {
             let dir = ray.direction.normalize();
