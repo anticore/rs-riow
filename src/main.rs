@@ -20,12 +20,13 @@ use camera::Camera;
 mod material;
 use material::LambertianMaterial;
 use material::MetalMaterial;
+use material::DielectricMaterial;
 
 use std::time::Instant;
 
 fn create_objects(world: &mut HittableList) {
     // centered lambertian material sphere
-    let origin = Vec3::new(0., 0., -1.);
+    let origin = Vec3::new(0., 0., -1.5);
     let radius = 0.5;
     let albedo = Vec3::new(0.7, 0.3, 0.3);
     let material = LambertianMaterial::new(albedo).into();
@@ -48,11 +49,9 @@ fn create_objects(world: &mut HittableList) {
 
     
     // right metal material ball
-    let origin = Vec3::new(-1., 0., -1.);
+    let origin = Vec3::new(-1., -0.1, -1.);
     let radius = 0.5;
-    let albedo = Vec3::new(0.2, 0.6, 0.8);
-    let fuzz = 0.9;
-    let material = MetalMaterial::new(albedo, fuzz).into();
+    let material = DielectricMaterial::new(1.7).into();
     world.add(Sphere::new(origin, radius, material).into());
 }
 
@@ -61,7 +60,7 @@ fn ray_color(ray: Ray, world: &HittableList, depth: u32) -> Vec3 {
         return Vec3::zero();
     }
 
-    match world.hit(ray, 0.001, 999.) {
+    match world.hit(ray, 0.001, 99999.) {
         Some(r) => {
             let (valid, scattered, attenuation) = r.material.scatter(ray, r);
             if valid { return attenuation * ray_color(scattered, &world, depth-1) } else { return Vec3::new(0., 0., 0.) };
