@@ -80,7 +80,12 @@ const MAX_DEPTH: u32 = 50;
 fn main() {
     let now = Instant::now();
     
-    let camera = Camera::new(16. / 9., 2., 1.);
+    let camera = Camera::new(
+        16. / 9., 
+        20., 
+        Vec3::new(-2.,2.,1.), 
+        Vec3::new(0.,0.,-1.), 
+        Vec3::new(0.,1.,0.));
     let image_height: u32 = (IMAGE_WIDTH as f32 / camera.aspect_ratio) as u32;
 
     let mut image = Image::new(IMAGE_WIDTH, image_height);

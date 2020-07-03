@@ -2,12 +2,12 @@
 
 use crate::vec::Vec3;
 use crate::ray::Ray;
+use crate::common::*;
 
 pub struct Camera {
     pub aspect_ratio: f32,
     pub viewport_height: f32,
     pub viewport_width: f32,
-    pub focal_length: f32,
 
     pub origin: Vec3,
     pub horizontal: Vec3,
@@ -16,19 +16,31 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn new(aspect_ratio: f32,  viewport_height: f32, focal_length: f32) -> Camera {
+    pub fn new(
+        aspect_ratio: f32,  
+        vfov: f32,
+        lookfrom: Vec3, 
+        lookat: Vec3, 
+        vup: Vec3
+    ) -> Camera {
+        let theta = deg_to_rad(vfov);
+        let h = f32::tan(theta / 2.);
+        let viewport_height = 2. * h;
         let viewport_width: f32 = aspect_ratio * viewport_height;
+
+        let w = (lookfrom - lookat).normalize();
+        let u = Vec3::cross(vup, w).normalize();
+        let v = Vec3::cross(w, u);
         
-        let origin = Vec3::new(0., 0., 0.);
-        let horizontal = Vec3::new(viewport_width, 0., 0.);
-        let vertical = Vec3::new(0., viewport_height, 0.);
-        let lower_left_corner = origin - horizontal/2. - vertical/2. - Vec3::new(0., 0., focal_length);
+        let origin = lookfrom;
+        let horizontal = viewport_width * u;
+        let vertical = viewport_height * v;
+        let lower_left_corner = origin - horizontal/2. - vertical/2. - w;
 
         Camera {
             aspect_ratio,
             viewport_height,
             viewport_width,
-            focal_length,
             origin,
             horizontal,
             vertical,
